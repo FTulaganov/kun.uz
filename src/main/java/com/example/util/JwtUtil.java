@@ -2,8 +2,8 @@ package com.example.util;
 
 import com.example.DTO.JwtDTO;
 import com.example.enums.ProfileRole;
+import com.example.exps.MethodNotAllowedExeption;
 import io.jsonwebtoken.*;
-import org.springframework.web.server.MethodNotAllowedException;
 
 import java.util.Date;
 
@@ -25,7 +25,7 @@ public class JwtUtil {
         return jwtBuilder.compact();
     }
 
-    public static JwtDTO decode(String token) throws MethodNotAllowedException {
+    public static JwtDTO decode(String token) throws MethodNotAllowedExeption {
         try {
             JwtParser jwtParser = Jwts.parser();
             jwtParser.setSigningKey(secretKey);
@@ -43,6 +43,6 @@ public class JwtUtil {
         } catch (JwtException e) {
             e.printStackTrace();
         }
-        throw new MethodNotAllowedException("Jwt exception");
+        throw new MethodNotAllowedExeption("ERROR");
     }
 }

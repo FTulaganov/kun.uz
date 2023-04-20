@@ -2,6 +2,7 @@ package com.example.service;
 
 import com.example.DTO.AuthDTO;
 import com.example.DTO.AuthResponseDTO;
+import com.example.DTO.ProfileDto;
 import com.example.entity.ProfileEntity;
 import com.example.enums.GeneralStatus;
 import com.example.exps.AppBadRequestExeption;
@@ -36,6 +37,23 @@ public class AuthService {
         responseDTO.setRole(entity.getRole());
         responseDTO.setJwt(JwtUtil.encode(entity.getId(), entity.getRole()));
         return responseDTO;
+    }
 
+    public ProfileDto registration(ProfileDto dto) {
+        Optional<ProfileEntity> optional = profileRepository.findByPhoneAndPassword(dto.getPhone(), dto.getPassword());
+        if (!optional.isEmpty()){
+            throw  new AppBadRequestExeption("such a user exists");
+        }
+        ProfileEntity profileEntity = new ProfileEntity();
+        profileEntity.setName(dto.getName());
+        profileEntity.setSurname(dto.getSurname());
+        profileEntity.setPhone(dto.getPhone());
+        profileEntity.setEmail(dto.getEmail());
+        profileEntity.setPassword(dto.getPassword());
+        profileRepository.save(profileEntity);
+
+        dto.setPassword(null);
+        dto.setId(profileEntity.getId());
+        return dto;
     }
 }

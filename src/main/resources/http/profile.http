@@ -1,12 +1,51 @@
 ### Create profle
-POST localhost:8080/api/v1/profile/
+POST localhost:8080/api/v1/profile/create
+Authorization: Beare eyJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE2ODE5Njg4NzMsImlkIjoyLCJyb2xlIjoiQURNSU4iLCJleHAiOjE2ODIwNTUyNzQsImlzcyI6Ikt1bnV6IHRlc3QgcG9ydGFsaSJ9.jwL7m268dSoNn0p0YkGAeU0WMK9bWf8XM8zk_SmRE1wYOu5CSC6NH0FK8L1hstG7FeB24Qcz2LsxiD09TXMccg
 Content-Type:  application/json
 
 {
-  "name": "Alish",
-  "surname": "Aliyev",
-  "email": "alisher@mail.ru",
-  "phone": "1213",
-  "password": "123456",
-  "role": "ADMIN"
+  "name": "Dostilla",
+  "surname": "Tolaganov",
+  "email": "Dostilla@gmail.ru",
+  "phone": "+998933650911",
+  "password": "123",
+  "role": "MODERATOR"
 }
+
+
+### Update profle
+POST localhost:8080/api/v1/profile/update/6
+Authorization: Beare eyJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE2ODE4MTkzNDQsImlkIjoyLCJyb2xlIjoiQURNSU4iLCJleHAiOjE2ODE5MDU3NDQsImlzcyI6Ikt1bnV6IHRlc3QgcG9ydGFsaSJ9.lHB54liQkOV3Peb_hBvD-F1Qs0eLH0CLJ9HX46AfVEjP2Sa3qEm4XXhrNxvmsyH8plWsRfdMDptN9bLs50GT_A
+Content-Type:  application/json
+
+{
+  "name": "Rakhmonali",
+  "surname": "Aliyev",
+  "phone": "+998996476970",
+  "password": "1234"
+}
+
+
+
+
+
+### Update ANY
+POST localhost:8080/api/v1/profile/update
+Authorization: Beare eyJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE2ODE5MDY0NDksImlkIjo0LCJyb2xlIjoiVVNFUiIsImV4cCI6MTY4MTk5Mjg0OSwiaXNzIjoiS3VudXogdGVzdCBwb3J0YWxpIn0.NnVMn4oH1VXv9lQtxMo7KxpYEWeTEw_9pCTIDIkxV681feZQG78C8sFUobDDbOejzfeaGsYcflUpKGohZ74IFg
+Content-Type:  application/json
+
+{
+  "name": "Sarvarbe",
+  "surname": "Mukhtorov",
+  "phone": "+998996477777",
+  "password": "11"
+}
+
+### delete profile
+GET localhost:8080/api/v1/profile/delete/7
+Authorization: Beare eyJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE2ODE5Njg4NzMsImlkIjoyLCJyb2xlIjoiQURNSU4iLCJleHAiOjE2ODIwNTUyNzQsImlzcyI6Ikt1bnV6IHRlc3QgcG9ydGFsaSJ9.jwL7m268dSoNn0p0YkGAeU0WMK9bWf8XM8zk_SmRE1wYOu5CSC6NH0FK8L1hstG7FeB24Qcz2LsxiD09TXMccg
+
+
+### pagination profile
+PUT localhost:8080/api/v1/profile/paging
+Authorization: Beare eyJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE2ODE5Njg4NzMsImlkIjoyLCJyb2xlIjoiQURNSU4iLCJleHAiOjE2ODIwNTUyNzQsImlzcyI6Ikt1bnV6IHRlc3QgcG9ydGFsaSJ9.jwL7m268dSoNn0p0YkGAeU0WMK9bWf8XM8zk_SmRE1wYOu5CSC6NH0FK8L1hstG7FeB24Qcz2LsxiD09TXMccg

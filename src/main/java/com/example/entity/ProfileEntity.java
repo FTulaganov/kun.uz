@@ -28,13 +28,16 @@ public class ProfileEntity {
     private String password;
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    private GeneralStatus status;
+    private GeneralStatus status = GeneralStatus.ACTIVE;
     @Enumerated(EnumType.STRING)
     @Column(name = "role")
-    private ProfileRole role;
+    private ProfileRole role=ProfileRole.USER;
     @Column(name = "visible")
     private Boolean visible = Boolean.TRUE;
     @Column(name = "created_date")
     private LocalDateTime createdDate = LocalDateTime.now();
+
+    @Column(name = "prt_id")
+    private Integer prt_id;
     // photo_id
 }
