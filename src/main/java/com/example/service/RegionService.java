@@ -1,7 +1,8 @@
 package com.example.service;
 
-import com.example.DTO.*;
-import com.example.entity.ArticleTypeEntity;
+import com.example.DTO.region.RegionDto;
+import com.example.DTO.region.RegionFullDto;
+import com.example.DTO.region.RegionLangDto;
 import com.example.entity.ProfileEntity;
 import com.example.entity.RegionEntity;
 import com.example.enums.ProfileRole;
@@ -10,7 +11,6 @@ import com.example.repository.ProfileRepository;
 import com.example.repository.RegionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedList;
@@ -25,12 +25,6 @@ public class RegionService {
     private ProfileRepository profileRepository;
 
     public RegionDto create(RegionDto dto, Integer id) {
-
-        Optional<ProfileEntity> admin = profileRepository.findById(id);
-        if (!admin.get().getRole().equals(ProfileRole.ADMIN)) {
-            throw new NotFoundExeption("ADMIN Not Found");
-        }
-
         RegionEntity entity = new RegionEntity();
         entity.setNameUz(dto.getNameUz());
         entity.setNameRu(dto.getNameRu());
@@ -43,10 +37,6 @@ public class RegionService {
 
     public Object update(Integer id, RegionDto dto, Integer adminId) {
         Optional<RegionEntity> optional = regionRepository.findById(id);
-        Optional<ProfileEntity> admin = profileRepository.findById(adminId);
-        if (!admin.get().getRole().equals(ProfileRole.ADMIN)) {
-            throw new NotFoundExeption("ADMIN Not Found");
-        }
         if (optional.isEmpty()) {
             throw new NotFoundExeption("Article Type Not Found");
         }
@@ -60,16 +50,12 @@ public class RegionService {
 
     public Boolean delete(Integer id, Integer adminId) {
         Optional<RegionEntity> optional = regionRepository.findById(id);
-        Optional<ProfileEntity> admin = profileRepository.findById(adminId);
-        if (!admin.get().getRole().equals(ProfileRole.ADMIN)) {
-            throw new NotFoundExeption("ADMIN Not Found");
-        }
         if (optional.isEmpty()) {
             throw new NotFoundExeption("Article Type Not Found");
         }
         RegionEntity entity = optional.get();
         entity.setVisible(Boolean.FALSE);
-        regionRepository.delete(entity);
+        regionRepository.save(entity);
         return true;
     }
 

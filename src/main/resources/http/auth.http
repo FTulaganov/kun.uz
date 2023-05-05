@@ -7,14 +7,19 @@ Content-Type:  application/json
   "password": "123456"
 }
 
-### registration
+### Registration
 GET localhost:8080/api/v1/auth/regis
 Content-Type:  application/json
 
 {
-  "name": "Sarvar",
-  "surname": "Mukhtorov",
-  "email": "sarvarchik@gmail.ru",
-  "phone": "+998330030528",
-  "password": "11111"
+  "name": "Fathulla",
+  "surname": "To'laganov",
+  "phone": "7777",
+  "email": "fathullatolaganov134@gmail.com",
+  "password": "123456"
 }
+
+###
+GET  localhost:8080/api/v1/auth/email/verification/
+
+

@@ -1,11 +1,13 @@
 package com.example.controller;
 
 import com.example.DTO.*;
-import com.example.entity.RegionEntity;
+import com.example.DTO.region.RegionDto;
+import com.example.DTO.region.RegionFullDto;
 import com.example.enums.ProfileRole;
 import com.example.exps.MethodNotAllowedExeption;
 import com.example.service.RegionService;
 import com.example.util.JwtUtil;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +20,7 @@ public class RegionController {
     private RegionService regionService;
 
     @PostMapping("/create")
-    public ResponseEntity<?> create(@RequestBody RegionDto dto,
+    public ResponseEntity<?> create(@RequestBody @Valid RegionDto dto,
                                     @RequestHeader("Authorization") String authorization) {
         String[] str = authorization.split(" ");
         String jwt = str[1];
@@ -28,7 +30,7 @@ public class RegionController {
 
     @PostMapping("/update/{id}")
     public ResponseEntity<?> updateById(@PathVariable("id") Integer id,
-                                        @RequestBody RegionDto dto,
+                                        @RequestBody @Valid RegionDto dto,
                                         @RequestHeader("Authorization") String authorization) {
         String[] str = authorization.split(" ");
         String jwt = str[1];

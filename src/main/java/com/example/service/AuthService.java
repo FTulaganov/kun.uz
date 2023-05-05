@@ -1,11 +1,15 @@
 package com.example.service;
 
-import com.example.DTO.AuthDTO;
-import com.example.DTO.AuthResponseDTO;
-import com.example.DTO.ProfileDto;
+import com.example.DTO.registration.RegistrationDTO;
+import com.example.DTO.registration.RegistrationResponseDTO;
+import com.example.DTO.auth.AuthDTO;
+import com.example.DTO.auth.AuthResponseDTO;
+import com.example.entity.EmailEntity;
 import com.example.entity.ProfileEntity;
 import com.example.enums.GeneralStatus;
+import com.example.enums.ProfileRole;
 import com.example.exps.AppBadRequestExeption;
+import com.example.repository.EmailHistoryReopository;
 import com.example.repository.ProfileRepository;
 import com.example.util.JwtUtil;
 import com.example.util.MD5Util;
@@ -18,6 +22,11 @@ import java.util.Optional;
 public class AuthService {
     @Autowired
     private ProfileRepository profileRepository;
+
+    @Autowired
+    private MailSenderervice mailSenderervice;
+    @Autowired
+    private EmailHistoryReopository emailHistoryReopository;
 
     public AuthResponseDTO login(AuthDTO dto) {
         Optional<ProfileEntity> optional = profileRepository.findByEmailAndPasswordAndVisible(
@@ -39,21 +48,48 @@ public class AuthService {
         return responseDTO;
     }
 
-    public ProfileDto registration(ProfileDto dto) {
-        Optional<ProfileEntity> optional = profileRepository.findByPhoneAndPassword(dto.getPhone(), dto.getPassword());
-        if (!optional.isEmpty()){
-            throw  new AppBadRequestExeption("such a user exists");
+    public RegistrationResponseDTO registration(RegistrationDTO dto) {
+        // check -?
+        Optional<ProfileEntity> optional = profileRepository.findByEmail(dto.getEmail());
+        if (optional.isPresent()) {
+            throw new IndexOutOfBoundsException("Email already exists mazgi.");
         }
-        ProfileEntity profileEntity = new ProfileEntity();
-        profileEntity.setName(dto.getName());
-        profileEntity.setSurname(dto.getSurname());
-        profileEntity.setPhone(dto.getPhone());
-        profileEntity.setEmail(dto.getEmail());
-        profileEntity.setPassword(dto.getPassword());
-        profileRepository.save(profileEntity);
-
-        dto.setPassword(null);
-        dto.setId(profileEntity.getId());
-        return dto;
+        ProfileEntity entity = new ProfileEntity();
+        entity.setName(dto.getName());
+        entity.setSurname(dto.getSurname());
+        entity.setRole(ProfileRole.USER);
+        entity.setPhone(dto.getPhone());
+        entity.setEmail(dto.getEmail());
+        entity.setPassword(MD5Util.getMd5Hash(dto.getPassword()));
+        entity.setStatus(GeneralStatus.REGISTER);
+        mailSenderervice.sendRegistrationEmailMime(dto.getEmail());
+        emailHistory(dto.getEmail());
+        String s = "Verification link was send to email: " + dto.getEmail();
+        profileRepository.save(entity);
+        return new RegistrationResponseDTO(s);
     }
+
+    private void emailHistory(String email) {
+        EmailEntity entity = new EmailEntity();
+        entity.setEmail(email);
+        entity.setMessage("Message send your email");
+        emailHistoryReopository.save(entity);
+    }
+
+    public RegistrationResponseDTO emailVerification(String jwt) {
+        // asjkdhaksdh.daskhdkashkdja
+        String email = JwtUtil.decodeEmailVerification(jwt);
+        Optional<ProfileEntity> optional = profileRepository.findByEmail(email);
+        if (optional.isEmpty()) {
+            throw new IndexOutOfBoundsException("Email not found.");
+        }
+        ProfileEntity entity = optional.get();
+        if (!entity.getStatus().equals(GeneralStatus.REGISTER)) {
+            throw new AppBadRequestExeption("Wrong status");
+        }
+        entity.setStatus(GeneralStatus.ACTIVE);
+        profileRepository.save(entity);
+        return new RegistrationResponseDTO("Registration Done");
+    }
+
 }

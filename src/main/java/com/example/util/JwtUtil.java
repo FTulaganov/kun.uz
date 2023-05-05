@@ -5,8 +5,8 @@ import com.example.enums.ProfileRole;
 import com.example.exps.MethodNotAllowedExeption;
 import io.jsonwebtoken.*;
 
-import java.util.Date;
 
+import java.util.Date;
 
 public class JwtUtil {
     private static final int tokenLiveTime = 1000 * 3600 * 24; // 1-day
@@ -25,7 +25,17 @@ public class JwtUtil {
         return jwtBuilder.compact();
     }
 
-    public static JwtDTO decode(String token) throws MethodNotAllowedExeption {
+    public static String encode(String text) {
+        JwtBuilder jwtBuilder = Jwts.builder();
+        jwtBuilder.setIssuedAt(new Date());
+        jwtBuilder.signWith(SignatureAlgorithm.HS512, secretKey);
+        jwtBuilder.claim("email", text);
+        jwtBuilder.setExpiration(new Date(System.currentTimeMillis() + (tokenLiveTime)));
+        jwtBuilder.setIssuer("Kunuz test portali");
+        return jwtBuilder.compact();
+    }
+
+    public static JwtDTO decode(String token) {
         try {
             JwtParser jwtParser = Jwts.parser();
             jwtParser.setSigningKey(secretKey);
@@ -43,6 +53,43 @@ public class JwtUtil {
         } catch (JwtException e) {
             e.printStackTrace();
         }
-        throw new MethodNotAllowedExeption("ERROR");
+        throw new MethodNotAllowedExeption("Jwt exception");
     }
+
+    public static String decodeEmailVerification(String token) {
+        try {
+            JwtParser jwtParser = Jwts.parser();
+            jwtParser.setSigningKey(secretKey);
+            Jws<Claims> jws = jwtParser.parseClaimsJws(token);
+            Claims claims = jws.getBody();
+            return (String) claims.get("email");
+        } catch (JwtException e) {
+            e.printStackTrace();
+        }
+        throw new MethodNotAllowedExeption("Jwt exception");
+    }
+
+    public static JwtDTO getJwtDTO(String authorization) {
+        String[] str = authorization.split(" ");
+        String jwt = str[1];
+        return JwtUtil.decode(jwt);
+    }
+
+    public static JwtDTO getJwtDTO(String authorization, ProfileRole... roleList) {
+        String[] str = authorization.split(" ");
+        String jwt = str[1];
+        JwtDTO jwtDTO = JwtUtil.decode(jwt);
+        boolean roleFound = false;
+        for (ProfileRole role : roleList) {
+            if (jwtDTO.getRole().equals(role)) {
+                roleFound = true;
+                break;
+            }
+        }
+        if (!roleFound) {
+            throw new MethodNotAllowedExeption("Method not allowed");
+        }
+        return jwtDTO;
+    }
+
 }

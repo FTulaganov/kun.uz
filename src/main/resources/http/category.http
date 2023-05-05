@@ -1,0 +1,34 @@
+### Create category
+POST localhost:8080/api/v1/category/create
+Authorization: Beare eyJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE2ODE5Njg4NzMsImlkIjoyLCJyb2xlIjoiQURNSU4iLCJleHAiOjE2ODIwNTUyNzQsImlzcyI6Ikt1bnV6IHRlc3QgcG9ydGFsaSJ9.jwL7m268dSoNn0p0YkGAeU0WMK9bWf8XM8zk_SmRE1wYOu5CSC6NH0FK8L1hstG7FeB24Qcz2LsxiD09TXMccg
+Content-Type:  application/json
+
+{
+  "nameUz": "uzbek",
+  "nameRu": "rus",
+  "nameEn": "english"
+}
+
+### Update category
+POST localhost:8080/api/v1/category/update/3
+Authorization: Beare eyJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE2ODE5Njg4NzMsImlkIjoyLCJyb2xlIjoiQURNSU4iLCJleHAiOjE2ODIwNTUyNzQsImlzcyI6Ikt1bnV6IHRlc3QgcG9ydGFsaSJ9.jwL7m268dSoNn0p0YkGAeU0WMK9bWf8XM8zk_SmRE1wYOu5CSC6NH0FK8L1hstG7FeB24Qcz2LsxiD09TXMccg
+Content-Type:  application/json
+
+{
+  "nameUz": "boy",
+  "nameRu": "богатый",
+  "nameEn": "rich"
+}
+
+### delete category
+GET localhost:8080/api/v1/category/delete/2
+Authorization: Beare eyJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE2ODE5Njg4NzMsImlkIjoyLCJyb2xlIjoiQURNSU4iLCJleHAiOjE2ODIwNTUyNzQsImlzcyI6Ikt1bnV6IHRlc3QgcG9ydGFsaSJ9.jwL7m268dSoNn0p0YkGAeU0WMK9bWf8XM8zk_SmRE1wYOu5CSC6NH0FK8L1hstG7FeB24Qcz2LsxiD09TXMccg
+
+
+### pagination category
+PUT localhost:8080/api/v1/category/paging
+Authorization: Beare eyJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE2ODE5Njg4NzMsImlkIjoyLCJyb2xlIjoiQURNSU4iLCJleHAiOjE2ODIwNTUyNzQsImlzcyI6Ikt1bnV6IHRlc3QgcG9ydGFsaSJ9.jwL7m268dSoNn0p0YkGAeU0WMK9bWf8XM8zk_SmRE1wYOu5CSC6NH0FK8L1hstG7FeB24Qcz2LsxiD09TXMccg
+
+
+### get lang category
+GET localhost:8080/api/v1/category/getLang/en

@@ -1,8 +1,8 @@
 package com.example.service;
 
-import com.example.DTO.ArticleTypeDto;
-import com.example.DTO.ArticleTypeFullDto;
-import com.example.DTO.GetLangAticleTypeDto;
+import com.example.DTO.articleType.ArticleTypeDto;
+import com.example.DTO.articleType.ArticleTypeFullDto;
+import com.example.DTO.articleType.GetLangAticleTypeDto;
 import com.example.entity.ArticleTypeEntity;
 import com.example.entity.ProfileEntity;
 import com.example.enums.ProfileRole;
@@ -25,11 +25,6 @@ public class ArticleTypeService {
     private ProfileRepository profileRepository;
 
     public ArticleTypeDto create(ArticleTypeDto dto, Integer id) {
-        Optional<ProfileEntity> admin = profileRepository.findById(id);
-        if (!admin.get().getRole().equals(ProfileRole.ADMIN)) {
-            throw new NotFoundExeption("ADMIN Not Found");
-        }
-
         ArticleTypeEntity entity = new ArticleTypeEntity();
         entity.setNameUz(dto.getNameUz());
         entity.setNameRu(dto.getNameRu());
@@ -43,10 +38,6 @@ public class ArticleTypeService {
 
     public Boolean update(Integer id, ArticleTypeDto dto, Integer adminId) {
         Optional<ArticleTypeEntity> optional = articleTypeRepository.findById(id);
-        Optional<ProfileEntity> admin = profileRepository.findById(adminId);
-        if (!admin.get().getRole().equals(ProfileRole.ADMIN)) {
-            throw new NotFoundExeption("ADMIN Not Found");
-        }
         if (optional.isEmpty()) {
             throw new NotFoundExeption("Article Type Not Found");
         }
@@ -61,26 +52,25 @@ public class ArticleTypeService {
 
     public Boolean delete(Integer id, Integer adminId) {
         Optional<ArticleTypeEntity> optional = articleTypeRepository.findById(id);
-        Optional<ProfileEntity> admin = profileRepository.findById(adminId);
-        if (!admin.get().getRole().equals(ProfileRole.ADMIN)) {
-            throw new NotFoundExeption("ADMIN Not Found");
-        }
         if (optional.isEmpty()) {
             throw new NotFoundExeption("Article Type Not Found");
         }
         ArticleTypeEntity entity = optional.get();
         entity.setVisible(Boolean.FALSE);
-        articleTypeRepository.delete(entity);
+        articleTypeRepository.save(entity);
         return true;
     }
 
     public Page<ArticleTypeFullDto> pagingtion(int page, int size) {
         Sort sort = Sort.by(Sort.Direction.DESC, "createdDate");
         Pageable pageable = PageRequest.of(page - 1, size, sort);
+
         Page<ArticleTypeEntity> pageObj = articleTypeRepository.findAll(pageable);
         Long totalCount = pageObj.getTotalElements();
+
         List<ArticleTypeEntity> entityList = pageObj.getContent();
         List<ArticleTypeFullDto> dtoList = new LinkedList<>();
+
         for (ArticleTypeEntity entity : entityList) {
             ArticleTypeFullDto dto = new ArticleTypeFullDto();
             dto.setId(entity.getId());

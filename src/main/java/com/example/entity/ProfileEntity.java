@@ -39,5 +39,12 @@ public class ProfileEntity {
 
     @Column(name = "prt_id")
     private Integer prt_id;
+    @Column(name = "attach_id")
+    private String attachId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "attach_id", insertable = false, updatable = false)
+    private AttachEntity attach;
+
+
     // photo_id
 }

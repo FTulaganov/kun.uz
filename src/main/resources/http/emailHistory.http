@@ -1,0 +1,18 @@
+### getEmail
+GET localhost:8080/api/v1/email/getEmail/fathullatolaganov134@gmail.com
+Authorization: Beare eyJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE2ODMyNjk5NTksImlkIjoyLCJyb2xlIjoiQURNSU4iLCJleHAiOjE2ODMzNTYzNTksImlzcyI6Ikt1bnV6IHRlc3QgcG9ydGFsaSJ9.3VIrDvsXdigtskqNLSwk-hjKIzFzmNGYyawh96NQHTc09_Q1Aa_EpyE7xoV002qp6GUYY9XVVfsyAZmaf8v5Sw
+
+
+### get given date
+POST localhost:8080/api/v1/email/getEmail/GivenDate
+Authorization: Beare eyJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE2ODMyNjk5NTksImlkIjoyLCJyb2xlIjoiQURNSU4iLCJleHAiOjE2ODMzNTYzNTksImlzcyI6Ikt1bnV6IHRlc3QgcG9ydGFsaSJ9.3VIrDvsXdigtskqNLSwk-hjKIzFzmNGYyawh96NQHTc09_Q1Aa_EpyE7xoV002qp6GUYY9XVVfsyAZmaf8v5Sw
+Content-Type:  application/json
+
+{
+  "startDate": "2023-05-04T00:00:00",
+  "endDate": "2023-05-04T23:59:59"
+}
+
+### pagination email history
+PUT localhost:8080/api/v1/email/paging
+Authorization: Beare eyJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE2ODMyNjk5NTksImlkIjoyLCJyb2xlIjoiQURNSU4iLCJleHAiOjE2ODMzNTYzNTksImlzcyI6Ikt1bnV6IHRlc3QgcG9ydGFsaSJ9.3VIrDvsXdigtskqNLSwk-hjKIzFzmNGYyawh96NQHTc09_Q1Aa_EpyE7xoV002qp6GUYY9XVVfsyAZmaf8v5Sw

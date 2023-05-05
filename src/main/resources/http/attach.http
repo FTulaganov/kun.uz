@@ -1,0 +1,34 @@
+POST http://localhost:8080/api/v1/attach/upload
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="file"; filename="loop.jpg"
+
+< C:\Users\Java_Back_End\Desktop\HOMEWORK\loop.jpg
+
+
+### video
+POST http://localhost:8080/api/v1/attach/upload
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="file"; filename="1.mp4"
+
+< C:\Users\Java_Back_End\Desktop\HOMEWORK\1.mp4
+
+
+### open general
+GET http://localhost:8080/api/v1/attach/open_general/ff4687a3-a764-4d6f-a3a6-10a7f2bd2074.jpg
+
+
+### download
+GET http://localhost:8080/api/v1/attach/download/ff4687a3-a764-4d6f-a3a6-10a7f2bd2074.jpg
+
+### pagination attach
+PUT localhost:8080/api/v1/attach/paging
+Authorization: Beare eyJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE2ODMxMTQ0MDMsImlkIjoyLCJyb2xlIjoiQURNSU4iLCJleHAiOjE2ODMyMDA4MDMsImlzcyI6Ikt1bnV6IHRlc3QgcG9ydGFsaSJ9.VKJN4tymkeuJaSX_WvuUVxWkSKLmnpaxtUKBXffb0ET-eHpQKYp3qIsTKkDUNwpx28O3hvazqBI8Hdjg0JXeow
+
+
+### pagination attach
+GET localhost:8080/api/v1/attach/delete/ff4687a3-a764-4d6f-a3a6-10a7f2bd2074
+Authorization: Beare eyJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE2ODMxMTQ0MDMsImlkIjoyLCJyb2xlIjoiQURNSU4iLCJleHAiOjE2ODMyMDA4MDMsImlzcyI6Ikt1bnV6IHRlc3QgcG9ydGFsaSJ9.VKJN4tymkeuJaSX_WvuUVxWkSKLmnpaxtUKBXffb0ET-eHpQKYp3qIsTKkDUNwpx28O3hvazqBI8Hdjg0JXeow

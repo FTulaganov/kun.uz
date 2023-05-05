@@ -1,18 +1,16 @@
 package com.example.service;
 
-import com.example.DTO.ProfileDto;
+import com.example.DTO.profile.ProfileDto;
+import com.example.entity.AttachEntity;
 import com.example.entity.ProfileEntity;
-import com.example.enums.GeneralStatus;
-import com.example.enums.ProfileRole;
-import com.example.exps.AppBadRequestExeption;
 import com.example.exps.NotFoundExeption;
+import com.example.repository.AttachRepository;
 import com.example.repository.ProfileRepository;
 import com.example.util.MD5Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -21,15 +19,12 @@ import java.util.Optional;
 public class ProfileService {
     @Autowired
     private ProfileRepository profileRepository;
+    @Autowired
+    private AttachRepository attachRepository;
 
     public ProfileDto create(ProfileDto dto, Integer id) {
         // check - homework
         isValidProfile(dto);
-        Optional<ProfileEntity> admin=profileRepository.findById(id);
-        if (!admin.get().getRole().equals(ProfileRole.ADMIN)){
-            throw new NotFoundExeption("ADMIN Not Found");
-        }
-
         ProfileEntity entity = new ProfileEntity();
         entity.setName(dto.getName());
         entity.setSurname(dto.getSurname());
@@ -55,13 +50,6 @@ public class ProfileService {
 
     public Boolean update(Integer id, ProfileDto dto, Integer adminId) {
         Optional<ProfileEntity> optional = profileRepository.findById(id);
-        Optional<ProfileEntity> admin=profileRepository.findById(adminId);
-        if (optional.isEmpty()) {
-            throw new NotFoundExeption("Profile Not Found");
-        }
-        if (!admin.get().getRole().equals(ProfileRole.ADMIN)){
-            throw new NotFoundExeption("ADMIN Not Found");
-        }
         ProfileEntity entity = optional.get();
         entity.setName(dto.getName());
         entity.setSurname(dto.getSurname());
@@ -100,6 +88,7 @@ public class ProfileService {
 
         return true;
     }
+
     public Page<ProfileDto> pagingtion(int page, int size) {
         Sort sort = Sort.by(Sort.Direction.DESC, "createdDate");
         Pageable pageable = PageRequest.of(page - 1, size, sort);
@@ -120,5 +109,21 @@ public class ProfileService {
         }
         Page<ProfileDto> response = new PageImpl<ProfileDto>(dtoList, pageable, totalCount);
         return response;
+    }
+
+    public boolean updateProfilePhoto(String photoId, Integer id) {
+        Optional<ProfileEntity> optional = profileRepository.findById(id);
+        Optional<AttachEntity> photo = attachRepository.findById(photoId);
+        if (optional.isEmpty()) {
+            throw new NotFoundExeption("Profile Not Found");
+        }
+        if (photo.isEmpty()) {
+            throw new NotFoundExeption("Photo Not Found");
+        }
+        ProfileEntity entity = optional.get();
+        entity.setAttachId(photo.get().getId());
+        profileRepository.save(entity); // update profile photo
+
+        return true;
     }
 }
