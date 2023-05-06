@@ -2,6 +2,8 @@ package com.example.service;
 
 import com.example.DTO.Article.ArticleRequestDTO;
 import com.example.entity.ArticleEntity;
+import com.example.entity.CategoryEntity;
+import com.example.entity.RegionEntity;
 import com.example.enums.ArticleStatus;
 import com.example.exps.ItemNotFoundExeption;
 import com.example.repository.ArticleRepository;
@@ -24,8 +26,8 @@ public class ArticleService {
     public ArticleRequestDTO create(ArticleRequestDTO dto, Integer moderId) {
         // check
 //        ProfileEntity moderator = profileService.get(moderId);
-//        RegionEntity region = regionService.get(dto.getRegionId());
-//        CategoryEntity category = categoryService.get(dto.getCategoryId());
+       RegionEntity region = regionService.get(dto.getRegionId());
+       CategoryEntity category = categoryService.get(dto.getCategoryId());
         ArticleEntity entity = new ArticleEntity();
         entity.setTitle(dto.getTitle());
         entity.setDescription(dto.getDescription());

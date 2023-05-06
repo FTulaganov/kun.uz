@@ -22,9 +22,7 @@ public class RegionController {
     @PostMapping("/create")
     public ResponseEntity<?> create(@RequestBody @Valid RegionDto dto,
                                     @RequestHeader("Authorization") String authorization) {
-        String[] str = authorization.split(" ");
-        String jwt = str[1];
-        JwtDTO jwtDTO = JwtUtil.decode(jwt);
+      JwtDTO jwtDTO =JwtUtil.getJwtDTO(authorization,ProfileRole.ADMIN);
         return ResponseEntity.ok(regionService.create(dto, jwtDTO.getId()));
     }
 
@@ -32,30 +30,21 @@ public class RegionController {
     public ResponseEntity<?> updateById(@PathVariable("id") Integer id,
                                         @RequestBody @Valid RegionDto dto,
                                         @RequestHeader("Authorization") String authorization) {
-        String[] str = authorization.split(" ");
-        String jwt = str[1];
-        JwtDTO jwtDTO = JwtUtil.decode(jwt);
+        JwtDTO jwtDTO =JwtUtil.getJwtDTO(authorization,ProfileRole.ADMIN);
         return ResponseEntity.ok(regionService.update(id, dto, jwtDTO.getId()));
     }
 
     @GetMapping("/delete/{id}")
     public ResponseEntity<?> delete(@PathVariable Integer id,
                                     @RequestHeader("Authorization") String authorization) {
-        String[] str = authorization.split(" ");
-        String jwt = str[1];
-        JwtDTO jwtDTO = JwtUtil.decode(jwt);
+        JwtDTO jwtDTO =JwtUtil.getJwtDTO(authorization,ProfileRole.ADMIN);
         return ResponseEntity.ok(regionService.delete(id, jwtDTO.getId()));
     }
     @PutMapping(value = "/paging")
     public ResponseEntity<Page<RegionFullDto>> paging(@RequestHeader("Authorization") String authorization,
                                                       @RequestParam(value = "page", defaultValue = "1") int page,
                                                       @RequestParam(value = "size", defaultValue = "2") int size) {
-        String[] str = authorization.split(" ");
-        String jwt = str[1];
-        JwtDTO jwtDTO = JwtUtil.decode(jwt);
-        if (!jwtDTO.getRole().equals(ProfileRole.ADMIN)) {
-            throw new MethodNotAllowedExeption("Method not allowed");
-        }
+        JwtDTO jwtDTO =JwtUtil.getJwtDTO(authorization,ProfileRole.ADMIN);
         Page<RegionFullDto> response = regionService.pagingtion(page, size);
         return ResponseEntity.ok(response);
     }

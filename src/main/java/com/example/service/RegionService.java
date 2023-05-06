@@ -6,6 +6,7 @@ import com.example.DTO.region.RegionLangDto;
 import com.example.entity.ProfileEntity;
 import com.example.entity.RegionEntity;
 import com.example.enums.ProfileRole;
+import com.example.exps.ItemNotFoundExeption;
 import com.example.exps.NotFoundExeption;
 import com.example.repository.ProfileRepository;
 import com.example.repository.RegionRepository;
@@ -21,9 +22,6 @@ import java.util.Optional;
 public class RegionService {
     @Autowired
     private RegionRepository regionRepository;
-    @Autowired
-    private ProfileRepository profileRepository;
-
     public RegionDto create(RegionDto dto, Integer id) {
         RegionEntity entity = new RegionEntity();
         entity.setNameUz(dto.getNameUz());
@@ -53,9 +51,7 @@ public class RegionService {
         if (optional.isEmpty()) {
             throw new NotFoundExeption("Article Type Not Found");
         }
-        RegionEntity entity = optional.get();
-        entity.setVisible(Boolean.FALSE);
-        regionRepository.save(entity);
+        regionRepository.updateVisible(id,adminId);
         return true;
     }
 
@@ -131,5 +127,12 @@ public class RegionService {
             list.add(dto);
         }
         return list;
+    }
+    public RegionEntity get(Integer id) {
+        Optional<RegionEntity> optional = regionRepository.findById(id);
+        if (optional.isEmpty()) {
+            throw new ItemNotFoundExeption("Item not found: " + id);
+        }
+        return optional.get();
     }
 }

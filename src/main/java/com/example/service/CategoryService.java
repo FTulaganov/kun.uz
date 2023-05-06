@@ -6,6 +6,7 @@ import com.example.DTO.category.CategoryLangDto;
 import com.example.entity.CategoryEntity;
 import com.example.entity.ProfileEntity;
 import com.example.enums.ProfileRole;
+import com.example.exps.ItemNotFoundExeption;
 import com.example.exps.NotFoundExeption;
 import com.example.repository.CategoryRepository;
 import com.example.repository.ProfileRepository;
@@ -29,6 +30,7 @@ public class CategoryService {
         entity.setNameUz(dto.getNameUz());
         entity.setNameRu(dto.getNameRu());
         entity.setNameEn(dto.getNameEn());
+        entity.setPrtId(id);
         categoryRepository.save(entity); // save categoy
 
         dto.setId(entity.getId());
@@ -53,9 +55,7 @@ public class CategoryService {
         if (optional.isEmpty()) {
             throw new NotFoundExeption("Article Type Not Found");
         }
-        CategoryEntity entity = optional.get();
-        entity.setVisible(Boolean.FALSE);
-        categoryRepository.save(entity);
+        categoryRepository.updateVisible(id, adminId);
         return true;
     }
 
@@ -131,5 +131,13 @@ public class CategoryService {
             list.add(dto);
         }
         return list;
+    }
+
+    public CategoryEntity get(Integer id) {
+        Optional<CategoryEntity> optional = categoryRepository.findById(id);
+        if (optional.isEmpty()) {
+            throw new ItemNotFoundExeption("Item not found: " + id);
+        }
+        return optional.get();
     }
 }

@@ -22,7 +22,7 @@ public class CategoryController {
     @PostMapping("/create")
     public ResponseEntity<?> create(@RequestBody @Valid CategoryDto dto,
                                     @RequestHeader("Authorization") String authorization) {
-        JwtDTO jwt = JwtUtil.getJwtDTO(authorization, ProfileRole.MODERATOR);
+        JwtDTO jwt = JwtUtil.getJwtDTO(authorization, ProfileRole.ADMIN);
         return ResponseEntity.ok(categoryService.create(dto, jwt.getId()));
     }
 
@@ -30,17 +30,15 @@ public class CategoryController {
     public ResponseEntity<?> updateById(@PathVariable("id") Integer id,
                                         @RequestBody @Valid CategoryDto dto,
                                         @RequestHeader("Authorization") String authorization) {
-        JwtDTO jwt = JwtUtil.getJwtDTO(authorization, ProfileRole.MODERATOR);
+        JwtDTO jwt = JwtUtil.getJwtDTO(authorization, ProfileRole.ADMIN);
         return ResponseEntity.ok(categoryService.update(id, dto, jwt.getId()));
     }
 
     @GetMapping("/delete/{id}")
     public ResponseEntity<?> delete(@PathVariable Integer id,
                                     @RequestHeader("Authorization") String authorization) {
-        String[] str = authorization.split(" ");
-        String jwt = str[1];
-        JwtDTO jwtDTO = JwtUtil.decode(jwt);
-        return ResponseEntity.ok(categoryService.delete(id, jwtDTO.getId()));
+        JwtDTO jwt = JwtUtil.getJwtDTO(authorization);
+        return ResponseEntity.ok(categoryService.delete(id, jwt.getId()));
     }
     @PutMapping(value = "/paging")
     public ResponseEntity<Page<CategoryFullDto>> paging(@RequestHeader("Authorization") String authorization,
