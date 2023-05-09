@@ -3,6 +3,7 @@ package com.example.controller;
 import com.example.DTO.JwtDTO;
 import com.example.service.ArticleLikeService;
 import com.example.util.JwtUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,11 +14,11 @@ public class ArticleLikeController {
     @Autowired
     private ArticleLikeService articleLikeService;
 
-    @PostMapping("/like/{id}")
+    @PostMapping("/privite/like/{id}")
     public ResponseEntity<Boolean> like(@PathVariable("id") String articleId,
-                                        @RequestHeader("Authorization") String authorization) {
-        JwtDTO jwt = JwtUtil.getJwtDTO(authorization);
-        return ResponseEntity.ok(articleLikeService.like(articleId, jwt.getId()));
+                                        HttpServletRequest request) {
+       Integer id = (Integer)  request.getAttribute("id");
+        return ResponseEntity.ok(articleLikeService.like(articleId, id));
     }
 
     @GetMapping("/dislike/{id}")

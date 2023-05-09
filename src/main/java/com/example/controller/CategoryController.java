@@ -7,6 +7,7 @@ import com.example.enums.ProfileRole;
 import com.example.exps.MethodNotAllowedExeption;
 import com.example.service.CategoryService;
 import com.example.util.JwtUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -19,32 +20,32 @@ public class CategoryController {
 
     @Autowired
     private CategoryService categoryService;
-    @PostMapping("/create")
+    @PostMapping("/privite/create")
     public ResponseEntity<?> create(@RequestBody @Valid CategoryDto dto,
-                                    @RequestHeader("Authorization") String authorization) {
-        JwtDTO jwt = JwtUtil.getJwtDTO(authorization, ProfileRole.ADMIN);
+                                    HttpServletRequest request) {
+        JwtDTO jwt = JwtUtil.checkForRequiredRole(request, ProfileRole.ADMIN);
         return ResponseEntity.ok(categoryService.create(dto, jwt.getId()));
     }
 
-    @PostMapping("/update/{id}")
+    @PostMapping("/privite/update/{id}")
     public ResponseEntity<?> updateById(@PathVariable("id") Integer id,
                                         @RequestBody @Valid CategoryDto dto,
-                                        @RequestHeader("Authorization") String authorization) {
-        JwtDTO jwt = JwtUtil.getJwtDTO(authorization, ProfileRole.ADMIN);
+                                        HttpServletRequest request) {
+        JwtDTO jwt = JwtUtil.checkForRequiredRole(request, ProfileRole.ADMIN);
         return ResponseEntity.ok(categoryService.update(id, dto, jwt.getId()));
     }
 
-    @GetMapping("/delete/{id}")
+    @GetMapping("/privite/delete/{id}")
     public ResponseEntity<?> delete(@PathVariable Integer id,
                                     @RequestHeader("Authorization") String authorization) {
         JwtDTO jwt = JwtUtil.getJwtDTO(authorization);
         return ResponseEntity.ok(categoryService.delete(id, jwt.getId()));
     }
-    @PutMapping(value = "/paging")
-    public ResponseEntity<Page<CategoryFullDto>> paging(@RequestHeader("Authorization") String authorization,
+    @PutMapping(value = "/privite/paging")
+    public ResponseEntity<Page<CategoryFullDto>> paging(HttpServletRequest request,
                                                         @RequestParam(value = "page", defaultValue = "1") int page,
                                                         @RequestParam(value = "size", defaultValue = "2") int size) {
-        JwtDTO jwt = JwtUtil.getJwtDTO(authorization, ProfileRole.ADMIN);
+        JwtUtil.checkForRequiredRole(request, ProfileRole.ADMIN);
         Page<CategoryFullDto> response = categoryService.pagingtion(page, size);
         return ResponseEntity.ok(response);
     }

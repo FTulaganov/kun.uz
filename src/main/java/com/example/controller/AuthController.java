@@ -20,7 +20,7 @@ public class AuthController {
     public ResponseEntity<AuthResponseDTO> login(@RequestBody @Valid AuthDTO dto) {
         return ResponseEntity.ok(authService.login(dto));
     }
-    @GetMapping("/regis")
+    @GetMapping("/public/regis")
     public ResponseEntity<RegistrationResponseDTO> registration(@RequestBody @Valid RegistrationDTO dto){
         return ResponseEntity.ok(authService.registration(dto));
     }

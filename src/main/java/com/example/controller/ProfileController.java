@@ -5,6 +5,7 @@ import com.example.DTO.profile.ProfileDto;
 import com.example.enums.ProfileRole;
 import com.example.service.ProfileService;
 import com.example.util.JwtUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -17,46 +18,42 @@ public class ProfileController {
     @Autowired
     private ProfileService profileService;
 
-    @PostMapping("/create")
+    @PostMapping("/private/create")
     public ResponseEntity<ProfileDto> create(@RequestBody @Valid ProfileDto dto,
-                                             @RequestHeader("Authorization") String authorization) {
-        JwtDTO jwt = JwtUtil.getJwtDTO(authorization, ProfileRole.ADMIN);
+                                             HttpServletRequest request) {
+        JwtDTO jwt = JwtUtil.checkForRequiredRole(request, ProfileRole.ADMIN);
         return ResponseEntity.ok(profileService.create(dto, jwt.getId()));
     }
 
-    @GetMapping("/delete/{id}")
+    @GetMapping("/private/delete/{id}")
     public ResponseEntity<?> delete(@PathVariable Integer id,
-                                    @RequestHeader("Authorization") String authorization) {
-        String[] str = authorization.split(" ");
-        String jwt = str[1];
-        JwtDTO jwtDTO = JwtUtil.decode(jwt);
-        return ResponseEntity.ok(profileService.delete(id, jwtDTO.getId()));
+                                   HttpServletRequest request) {
+       Integer profilId = (Integer) request.getAttribute("id");
+        return ResponseEntity.ok(profileService.delete(id, profilId));
     }
 
-    @PostMapping("/update/{id}")
+    @PostMapping("/private/update/{id}")
     public ResponseEntity<?> updateById(@PathVariable("id") Integer id,
                                         @RequestBody @Valid ProfileDto dto,
-                                        @RequestHeader("Authorization") String authorization) {
-        JwtDTO jwt = JwtUtil.getJwtDTO(authorization, ProfileRole.ADMIN);
+                                       HttpServletRequest request) {
+        JwtDTO jwt = JwtUtil.checkForRequiredRole(request, ProfileRole.ADMIN);
         return ResponseEntity.ok(profileService.update(id, dto, jwt.getId()));
     }
 
-    @PutMapping(value = "/paging")
-    public ResponseEntity<Page<ProfileDto>> paging(@RequestHeader("Authorization") String authorization,
+    @PutMapping(value = "/private/paging")
+    public ResponseEntity<Page<ProfileDto>> paging(HttpServletRequest request,
                                                    @RequestParam(value = "page", defaultValue = "1") int page,
                                                    @RequestParam(value = "size", defaultValue = "2") int size) {
-        JwtUtil.getJwtDTO(authorization, ProfileRole.ADMIN);
+        JwtUtil.checkForRequiredRole(request, ProfileRole.ADMIN);
         Page<ProfileDto> response = profileService.pagingtion(page, size);
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/update")
+    @PostMapping("/private/update")
     public ResponseEntity<?> update(@RequestBody @Valid ProfileDto dto,
-                                    @RequestHeader("Authorization") String authorization) {
-        String[] str = authorization.split(" ");
-        String jwt = str[1];
-        JwtDTO jwtDTO = JwtUtil.decode(jwt);
-        return ResponseEntity.ok(profileService.updateProfile(dto, jwtDTO.getId()));
+                                    HttpServletRequest request) {
+       Integer id = (Integer) request.getAttribute("id");
+        return ResponseEntity.ok(profileService.updateProfile(dto, id));
     }
 
     @PostMapping("/updatePhoto/{id}")

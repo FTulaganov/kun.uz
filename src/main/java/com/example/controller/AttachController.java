@@ -5,6 +5,7 @@ import com.example.DTO.JwtDTO;
 import com.example.enums.ProfileRole;
 import com.example.service.AttachService;
 import com.example.util.JwtUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
@@ -53,18 +54,18 @@ public class AttachController {
     }
 
     @PutMapping(value = "/paging")
-    public ResponseEntity<Page<AttachDTO>> paging(@RequestHeader("Authorization") String authorization,
+    public ResponseEntity<Page<AttachDTO>> paging(HttpServletRequest request,
                                                   @RequestParam(value = "page", defaultValue = "1") int page,
                                                   @RequestParam(value = "size", defaultValue = "2") int size) {
-        JwtDTO jwt = JwtUtil.getJwtDTO(authorization, ProfileRole.ADMIN);
+        JwtUtil.checkForRequiredRole(request, ProfileRole.ADMIN);
         Page<AttachDTO> response = attachService.pagingtion(page, size);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/delete/{fineName}")
     public ResponseEntity<Boolean> delete(@PathVariable("fineName") String fileName,
-                                          @RequestHeader("Authorization") String authorization) {
-        JwtDTO jwt = JwtUtil.getJwtDTO(authorization, ProfileRole.ADMIN);
+                                          HttpServletRequest request) {
+        JwtUtil.checkForRequiredRole(request, ProfileRole.ADMIN);
         return ResponseEntity.ok(attachService.delete(fileName));
     }
 }

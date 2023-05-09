@@ -4,6 +4,7 @@ import com.example.DTO.JwtDTO;
 import com.example.enums.ProfileRole;
 import com.example.exps.MethodNotAllowedExeption;
 import io.jsonwebtoken.*;
+import jakarta.servlet.http.HttpServletRequest;
 
 
 import java.util.Date;
@@ -36,24 +37,14 @@ public class JwtUtil {
     }
 
     public static JwtDTO decode(String token) {
-        try {
             JwtParser jwtParser = Jwts.parser();
             jwtParser.setSigningKey(secretKey);
-
             Jws<Claims> jws = jwtParser.parseClaimsJws(token);
-
             Claims claims = jws.getBody();
-
             Integer id = (Integer) claims.get("id");
-
             String role = (String) claims.get("role");
             ProfileRole profileRole = ProfileRole.valueOf(role);
-
             return new JwtDTO(id, profileRole);
-        } catch (JwtException e) {
-            e.printStackTrace();
-        }
-        throw new MethodNotAllowedExeption("Jwt exception");
     }
 
     public static String decodeEmailVerification(String token) {
@@ -75,6 +66,13 @@ public class JwtUtil {
         return JwtUtil.decode(jwt);
     }
 
+   /* public static JwtDTO getJwtDTORequest(HttpServletRequest request) {
+        String[] str = request.get();
+        String jwt = str[1];
+        return JwtUtil.decode(jwt);
+    }*/
+
+
     public static JwtDTO getJwtDTO(String authorization, ProfileRole... roleList) {
         String[] str = authorization.split(" ");
         String jwt = str[1];
@@ -90,6 +88,20 @@ public class JwtUtil {
             throw new MethodNotAllowedExeption("Method not allowed");
         }
         return jwtDTO;
+    }
+    public static JwtDTO checkForRequiredRole(HttpServletRequest request, ProfileRole... roleList) {
+        ProfileRole jwtRole = (ProfileRole) request.getAttribute("role");
+        boolean roleFound = false;
+        for (ProfileRole role : roleList) {
+            if (jwtRole.equals(role)) {
+                roleFound = true;
+                break;
+            }
+        }
+        if (!roleFound) {
+            throw new MethodNotAllowedExeption("Method not allowed");
+        }
+        return null;
     }
 
 }

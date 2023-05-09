@@ -7,9 +7,11 @@ import com.example.enums.ProfileRole;
 import com.example.exps.MethodNotAllowedExeption;
 import com.example.service.ArticleTypeService;
 import com.example.util.JwtUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,19 +24,17 @@ public class ArticleTypeController {
 
     @PostMapping("/create")
     public ResponseEntity<?> create(@RequestBody @Valid ArticleTypeDto dto,
-                                    @RequestHeader("Authorization") String authorization) {
-        String[] str = authorization.split(" ");
-        String jwt = str[1];
-        JwtDTO jwtDTO = JwtUtil.decode(jwt);
-        return ResponseEntity.ok(articleTypeService.create(dto, jwtDTO.getId()));
+                                    HttpServletRequest request) {
+       Integer id = (Integer) request.getAttribute("id");
+        return ResponseEntity.ok(articleTypeService.create(dto,id));
     }
 
     @PostMapping("/update/{id}")
     public ResponseEntity<?> updateById(@PathVariable("id") Integer id,
                                         @RequestBody @Valid ArticleTypeDto dto,
-                                        @RequestHeader("Authorization") String authorization) {
-        JwtDTO jwt = JwtUtil.getJwtDTO(authorization, ProfileRole.ADMIN);
-        return ResponseEntity.ok(articleTypeService.update(id, dto, jwt.getId()));
+                                       HttpServletRequest request) {
+        Integer idAdmin = (Integer) request.getAttribute("id");
+        return ResponseEntity.ok(articleTypeService.update(id, dto, idAdmin));
     }
 
     @GetMapping("/delete/{id}")
